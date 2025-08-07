@@ -164,36 +164,151 @@ const GovernmentPortal = () => {
         {/* Department Management */}
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Department Management</h3>
-          <p className="text-gray-600">Add, view, and manage government departments.</p>
-          {/* TODO: Department management table/component */}
+          <p className="text-gray-600 mb-4">Add, view, and manage government departments.</p>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Agriculture Department</h4>
+                <p className="text-sm text-gray-600">12 officials</p>
+              </div>
+              <button className="btn-secondary text-sm">Manage</button>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Rural Development</h4>
+                <p className="text-sm text-gray-600">8 officials</p>
+              </div>
+              <button className="btn-secondary text-sm">Manage</button>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Environmental Protection</h4>
+                <p className="text-sm text-gray-600">5 officials</p>
+              </div>
+              <button className="btn-secondary text-sm">Manage</button>
+            </div>
+          </div>
+          <button className="btn-primary w-full mt-4">Add New Department</button>
         </div>
         {/* Policy Management */}
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Policy Management</h3>
-          <p className="text-gray-600">Create, edit, and review agricultural policies.</p>
-          {/* TODO: Policy management table/component */}
+          <p className="text-gray-600 mb-4">Create, edit, and review agricultural policies.</p>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Agricultural Subsidy Program 2024</h4>
+                <p className="text-sm text-gray-600">Active - Expires Dec 31, 2024</p>
+              </div>
+              <button className="btn-secondary text-sm">Edit</button>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Water Conservation Initiative</h4>
+                <p className="text-sm text-gray-600">Active - Expires Feb 28, 2025</p>
+              </div>
+              <button className="btn-secondary text-sm">Edit</button>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Organic Farming Certification</h4>
+                <p className="text-sm text-gray-600">Planning - Starts Jun 1, 2024</p>
+              </div>
+              <button className="btn-secondary text-sm">Edit</button>
+            </div>
+          </div>
+          <button className="btn-primary w-full mt-4">Create New Policy</button>
         </div>
         {/* Subsidy Management */}
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Subsidy Management</h3>
-          <p className="text-gray-600">Track and manage subsidies for farmers.</p>
-          {/* TODO: Subsidy management table/component */}
+          <p className="text-gray-600 mb-4">Track and manage subsidies for farmers.</p>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Seed Subsidy</h4>
+                <p className="text-sm text-gray-600">500 applicants - Deadline Apr 30</p>
+              </div>
+              <button className="btn-secondary text-sm">Review</button>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Equipment Loan</h4>
+                <p className="text-sm text-gray-600">320 applicants - Deadline May 15</p>
+              </div>
+              <button className="btn-secondary text-sm">Review</button>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Irrigation System Grant</h4>
+                <p className="text-sm text-gray-600">180 applicants - Deadline Jun 30</p>
+              </div>
+              <button className="btn-secondary text-sm">Review</button>
+            </div>
+          </div>
+          <button className="btn-primary w-full mt-4">Create New Subsidy</button>
         </div>
         {/* Regional Analytics */}
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Regional Analytics</h3>
-          <p className="text-gray-600">View analytics and reports by region.</p>
-          {/* TODO: Regional analytics component */}
+          <p className="text-gray-600 mb-4">View analytics and reports by region.</p>
+          <div className="space-y-3">
+            <div className="p-3 bg-gray-50 rounded">
+              <h4 className="font-medium mb-2">Northern Region</h4>
+              <div className="flex justify-between text-sm">
+                <span>Farmers: 120</span>
+                <span>Land: 2,450 acres</span>
+              </div>
+            </div>
+            <div className="p-3 bg-gray-50 rounded">
+              <h4 className="font-medium mb-2">Southern Region</h4>
+              <div className="flex justify-between text-sm">
+                <span>Farmers: 95</span>
+                <span>Land: 1,870 acres</span>
+              </div>
+            </div>
+            <div className="p-3 bg-gray-50 rounded">
+              <h4 className="font-medium mb-2">Eastern Region</h4>
+              <div className="flex justify-between text-sm">
+                <span>Farmers: 142</span>
+                <span>Land: 3,120 acres</span>
+              </div>
+            </div>
+          </div>
+          <button className="btn-primary w-full mt-4">View Detailed Report</button>
         </div>
         {/* Support */}
-        <div className="card">
+        <div className="card lg:col-span-2">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Support</h3>
-          <p className="text-gray-600">Request help or contact support for assistance.</p>
-          {/* TODO: Support request form/component */}
+          <p className="text-gray-600 mb-4">Manage support requests from farmers and other users.</p>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Subsidy Application Query</h4>
+                <p className="text-sm text-gray-600">From John Smith - Jan 15, 2024</p>
+              </div>
+              <button className="btn-secondary text-sm">Respond</button>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Land Registration Issue</h4>
+                <p className="text-sm text-gray-600">From Mary Johnson - Jan 14, 2024</p>
+              </div>
+              <button className="btn-secondary text-sm">Respond</button>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <div>
+                <h4 className="font-medium">Equipment Loan Status</h4>
+                <p className="text-sm text-gray-600">From Robert Brown - Jan 13, 2024</p>
+              </div>
+              <button className="btn-secondary text-sm">Respond</button>
+            </div>
+          </div>
+          <button className="btn-primary w-full mt-4">View All Requests</button>
         </div>
       </div>
     </div>
   );
 };
 
-export default GovernmentPortal; 
+export default GovernmentPortal;

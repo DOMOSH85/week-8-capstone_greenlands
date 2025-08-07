@@ -2,6 +2,11 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
 const User = require('../models/User');
+const Department = require('../models/Department');
+const Policy = require('../models/Policy');
+const Subsidy = require('../models/Subsidy');
+const SubsidyApplication = require('../models/SubsidyApplication');
+const SupportRequest = require('../models/SupportRequest');
 
 const router = express.Router();
 
@@ -224,47 +229,11 @@ router.delete('/:id/permissions/:permission', auth, async (req, res) => {
 });
 
 // @route   GET /api/government/policies
-// @desc    Get government policies (mock data)
+// @desc    Get government policies
 // @access  Private
 router.get('/policies', auth, async (req, res) => {
   try {
-    // Mock policies data - in real app, this would come from a database
-    const policies = [
-      {
-        id: 1,
-        title: 'Agricultural Subsidy Program 2024',
-        description: 'Financial support for small-scale farmers implementing sustainable practices',
-        department: 'Agriculture Department',
-        status: 'Active',
-        effectiveDate: '2024-01-01',
-        expiryDate: '2024-12-31',
-        budget: 5000000,
-        beneficiaries: 2500
-      },
-      {
-        id: 2,
-        title: 'Water Conservation Initiative',
-        description: 'Mandatory water-saving measures for agricultural irrigation',
-        department: 'Environmental Protection',
-        status: 'Active',
-        effectiveDate: '2024-03-01',
-        expiryDate: '2025-02-28',
-        budget: 2000000,
-        beneficiaries: 1800
-      },
-      {
-        id: 3,
-        title: 'Organic Farming Certification',
-        description: 'Support program for farmers transitioning to organic farming methods',
-        department: 'Agriculture Department',
-        status: 'Planning',
-        effectiveDate: '2024-06-01',
-        expiryDate: '2025-05-31',
-        budget: 1500000,
-        beneficiaries: 1200
-      }
-    ];
-
+    const policies = await Policy.find().sort({ createdAt: -1 });
     res.json(policies);
   } catch (err) {
     console.error(err.message);
@@ -272,48 +241,406 @@ router.get('/policies', auth, async (req, res) => {
   }
 });
 
+// @route   POST /api/government/policies
+// @desc    Create a new policy
+// @access  Private
+router.post('/policies', auth, [
+  body('title', 'Title is required').not().isEmpty(),
+  body('description', 'Description is required').not().isEmpty(),
+  body('department', 'Department is required').not().isEmpty(),
+  body('effectiveDate', 'Effective date is required').isISO8601()
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { title, description, department, status, effectiveDate, expiryDate, budget, beneficiaries } = req.body;
+
+    const policy = new Policy({
+      title,
+      description,
+      department,
+      status: status || 'Draft',
+      effectiveDate,
+      expiryDate,
+      budget: budget || 0,
+      beneficiaries: beneficiaries || 0,
+      createdBy: req.user.id
+    });
+
+    const savedPolicy = await policy.save();
+    res.json(savedPolicy);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/government/policies/:id
+// @desc    Update a policy
+// @access  Private
+router.put('/policies/:id', auth, [
+  body('title', 'Title is required').not().isEmpty(),
+  body('description', 'Description is required').not().isEmpty(),
+  body('department', 'Department is required').not().isEmpty(),
+  body('effectiveDate', 'Effective date is required').isISO8601()
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { title, description, department, status, effectiveDate, expiryDate, budget, beneficiaries } = req.body;
+
+    const policy = await Policy.findById(req.params.id);
+    if (!policy) {
+      return res.status(404).json({ message: 'Policy not found' });
+    }
+
+    policy.title = title;
+    policy.description = description;
+    policy.department = department;
+    policy.status = status || policy.status;
+    policy.effectiveDate = effectiveDate;
+    policy.expiryDate = expiryDate;
+    policy.budget = budget || policy.budget;
+    policy.beneficiaries = beneficiaries || policy.beneficiaries;
+
+    const updatedPolicy = await policy.save();
+    res.json(updatedPolicy);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Policy not found' });
+    }
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   DELETE /api/government/policies/:id
+// @desc    Delete a policy
+// @access  Private
+router.delete('/policies/:id', auth, async (req, res) => {
+  try {
+    const policy = await Policy.findById(req.params.id);
+    if (!policy) {
+      return res.status(404).json({ message: 'Policy not found' });
+    }
+
+    await Policy.findByIdAndRemove(req.params.id);
+    res.json({ message: 'Policy removed' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Policy not found' });
+    }
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // @route   GET /api/government/subsidies
-// @desc    Get available subsidies (mock data)
+// @desc    Get available subsidies
 // @access  Private
 router.get('/subsidies', auth, async (req, res) => {
   try {
-    // Mock subsidies data
-    const subsidies = [
-      {
-        id: 1,
-        name: 'Seed Subsidy',
-        description: '50% subsidy on certified seeds for major crops',
-        amount: 500,
-        maxBeneficiaries: 1000,
-        department: 'Agriculture Department',
-        status: 'Active',
-        applicationDeadline: '2024-04-30'
-      },
-      {
-        id: 2,
-        name: 'Equipment Loan',
-        description: 'Low-interest loans for farm machinery and equipment',
-        amount: 10000,
-        maxBeneficiaries: 500,
-        department: 'Rural Development',
-        status: 'Active',
-        applicationDeadline: '2024-05-15'
-      },
-      {
-        id: 3,
-        name: 'Irrigation System Grant',
-        description: 'Grant for installing modern irrigation systems',
-        amount: 2500,
-        maxBeneficiaries: 300,
-        department: 'Agriculture Department',
-        status: 'Active',
-        applicationDeadline: '2024-06-30'
-      }
-    ];
-
+    const subsidies = await Subsidy.find().sort({ applicationDeadline: 1 });
     res.json(subsidies);
   } catch (err) {
     console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   POST /api/government/subsidies
+// @desc    Create a new subsidy
+// @access  Private
+router.post('/subsidies', auth, [
+  body('name', 'Name is required').not().isEmpty(),
+  body('description', 'Description is required').not().isEmpty(),
+  body('eligibility', 'Eligibility criteria is required').not().isEmpty(),
+  body('applicationDeadline', 'Application deadline is required').isISO8601()
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const subsidy = new Subsidy(req.body);
+    const savedSubsidy = await subsidy.save();
+    res.json(savedSubsidy);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/government/subsidies/:id
+// @desc    Update a subsidy
+// @access  Private
+router.put('/subsidies/:id', auth, [
+  body('name', 'Name is required').not().isEmpty(),
+  body('description', 'Description is required').not().isEmpty(),
+  body('eligibility', 'Eligibility criteria is required').not().isEmpty(),
+  body('applicationDeadline', 'Application deadline is required').isISO8601()
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const subsidy = await Subsidy.findById(req.params.id);
+    if (!subsidy) {
+      return res.status(404).json({ message: 'Subsidy not found' });
+    }
+
+    Object.assign(subsidy, req.body);
+    const updatedSubsidy = await subsidy.save();
+    res.json(updatedSubsidy);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Subsidy not found' });
+    }
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   DELETE /api/government/subsidies/:id
+// @desc    Delete a subsidy
+// @access  Private
+router.delete('/subsidies/:id', auth, async (req, res) => {
+  try {
+    const subsidy = await Subsidy.findById(req.params.id);
+    if (!subsidy) {
+      return res.status(404).json({ message: 'Subsidy not found' });
+    }
+
+    await Subsidy.findByIdAndRemove(req.params.id);
+    res.json({ message: 'Subsidy removed' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Subsidy not found' });
+    }
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   GET /api/government/subsidy-applications
+// @desc    Get all subsidy applications
+// @access  Private
+router.get('/subsidy-applications', auth, async (req, res) => {
+  try {
+    const applications = await SubsidyApplication.find()
+      .populate('subsidy', 'name')
+      .populate('farmer', 'name email')
+      .sort({ createdAt: -1 });
+    res.json(applications);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/government/subsidy-applications/:id
+// @desc    Update subsidy application status
+// @access  Private
+router.put('/subsidy-applications/:id', auth, [
+  body('status', 'Status is required').isIn(['pending', 'approved', 'rejected'])
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const application = await SubsidyApplication.findById(req.params.id)
+      .populate('subsidy')
+      .populate('farmer');
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+
+    application.status = req.body.status;
+    const updatedApplication = await application.save();
+    
+    // TODO: Send notification to farmer about status change
+    
+    res.json(updatedApplication);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   GET /api/government/departments
+// @desc    Get all departments
+// @access  Private
+router.get('/departments', auth, async (req, res) => {
+  try {
+    const departments = await Department.find({ active: true }).sort({ name: 1 });
+    res.json(departments);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   POST /api/government/departments
+// @desc    Create a new department
+// @access  Private
+router.post('/departments', auth, [
+  body('name', 'Department name is required').not().isEmpty(),
+  body('description', 'Description is required').not().isEmpty()
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, description, head, budget } = req.body;
+    
+    // Check if department already exists
+    const existingDepartment = await Department.findOne({ name: new RegExp(`^${name}$`, 'i') });
+    if (existingDepartment) {
+      return res.status(400).json({ message: 'Department already exists' });
+    }
+
+    const department = new Department({
+      name,
+      description,
+      head: head || null,
+      budget: budget || 0
+    });
+
+    const savedDepartment = await department.save();
+    res.json(savedDepartment);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/government/departments/:id
+// @desc    Update a department
+// @access  Private
+router.put('/departments/:id', auth, [
+  body('name', 'Department name is required').not().isEmpty(),
+  body('description', 'Description is required').not().isEmpty()
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const department = await Department.findById(req.params.id);
+    if (!department) {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+
+    // Check if another department with same name exists
+    const existingDepartment = await Department.findOne({
+      name: new RegExp(`^${req.body.name}$`, 'i'),
+      _id: { $ne: req.params.id }
+    });
+    if (existingDepartment) {
+      return res.status(400).json({ message: 'Department name already exists' });
+    }
+
+    Object.assign(department, req.body);
+    const updatedDepartment = await department.save();
+    res.json(updatedDepartment);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   DELETE /api/government/departments/:id
+// @desc    Delete a department
+// @access  Private
+router.delete('/departments/:id', auth, async (req, res) => {
+  try {
+    const department = await Department.findById(req.params.id);
+    if (!department) {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+
+    // Instead of deleting, mark as inactive
+    department.active = false;
+    await department.save();
+    
+    res.json({ message: 'Department deactivated' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   GET /api/government/support-requests
+// @desc    Get all support requests
+// @access  Private
+router.get('/support-requests', auth, async (req, res) => {
+  try {
+    const requests = await SupportRequest.find()
+      .populate('user', 'name email role')
+      .sort({ createdAt: -1 });
+    res.json(requests);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/government/support-requests/:id
+// @desc    Update support request status
+// @access  Private
+router.put('/support-requests/:id', auth, [
+  body('status', 'Status is required').isIn(['pending', 'in-progress', 'resolved', 'closed']),
+  body('response', 'Response is required').not().isEmpty()
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const request = await SupportRequest.findById(req.params.id).populate('user');
+    if (!request) {
+      return res.status(404).json({ message: 'Support request not found' });
+    }
+
+    request.status = req.body.status;
+    request.response = req.body.response;
+    request.resolvedBy = req.user.id;
+    request.resolvedAt = new Date();
+    
+    const updatedRequest = await request.save();
+    
+    // TODO: Send notification to user about status change
+    
+    res.json(updatedRequest);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Support request not found' });
+    }
     res.status(500).json({ message: 'Server error' });
   }
 });

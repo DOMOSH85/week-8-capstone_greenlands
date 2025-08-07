@@ -1004,14 +1004,14 @@ const FarmerPortal = () => {
                     <h5 className="font-medium text-green-900">Subsidy Application</h5>
                     <p className="text-sm text-green-700">Apply for agricultural subsidies</p>
                   </div>
-                  <button className="btn-primary">Apply Now</button>
+                  <button className="btn-primary" onClick={openApplySubsidy}>Apply Now</button>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
                   <div>
                     <h5 className="font-medium text-blue-900">Technical Support</h5>
                     <p className="text-sm text-blue-700">Get expert farming advice</p>
                   </div>
-                  <button className="btn-primary">Contact Expert</button>
+                  <button className="btn-primary" onClick={() => setSupportOpen(true)}>Contact Expert</button>
                 </div>
               </div>
             </div>
