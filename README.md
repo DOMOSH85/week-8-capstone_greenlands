@@ -82,9 +82,9 @@ A comprehensive MERN stack application focused on technology to improve land man
    ```
 
 5. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000
-   - API Health Check: http://localhost:5000/api/health
+   - Frontend: https://ogollas-final-project.vercel.app/
+   - Backend API: https://sustainable-lands.onrender.com
+     
 
 ## 📁 Project Structure
 
