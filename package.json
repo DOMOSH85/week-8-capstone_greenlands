@@ -1,0 +1,29 @@
+{
+  "name": "greenlands",
+  "version": "1.0.0",
+  "description": "Greenlands - A sustainable farming management system",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "deploy:backend": "echo 'Deploy backend to Render'",
+    "deploy:frontend": "echo 'Deploy frontend to Vercel'"
+  },
+  "keywords": [
+    "farming",
+    "sustainability",
+    "land-management"
+  ],
+  "author": "Greenlands Team",
+  "license": "MIT",
+  "dependencies": {
+    "mongoose": "^8.17.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

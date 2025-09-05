@@ -1,248 +1,324 @@
-# GreenLands - Land Management Platform
+# Land Registration System
 
-A comprehensive MERN stack application focused on technology to improve land management, connecting farmers, government organizations, and stakeholders with robust data visualization and analytics.
+A comprehensive land registration and management system built with the MERN stack (MongoDB, Express.js, React, Node.js). This system allows farmers to register and manage their land parcels while providing government officials with analytics and oversight capabilities.
 
-## 🌟 Features
+## Table of Contents
 
-### **Core Functionality**
-- **Land Mapping**: Interactive maps showing land parcels, soil data, and crop information
-- **Farmer Portal**: Profile management, crop tracking, weather alerts
-- **Government Dashboard**: Policy updates, subsidy information, compliance tracking
-- **Analytics Hub**: Data visualization, reports, trend analysis
-- **Communication Center**: Messaging between stakeholders
-- **Real-time Updates**: Live data synchronization across all modules
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Prerequisites](#prerequisites)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [Running the Application](#running-the-application)
+- [Deployment](#deployment)
+- [API Endpoints](#api-endpoints)
+- [Development Guidelines](#development-guidelines)
+- [License](#license)
 
-### **Design & UX**
-- **Responsive Design**: Works seamlessly on all screen sizes (mobile, tablet, desktop)
-- **Modern UI**: Built with Radix UI components and Tailwind CSS
-- **Color Theme**: Professional green and black color palette
-- **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
-- **Performance**: Optimized for fast loading and smooth interactions
+## Features
 
-### **Technology Stack**
-- **Frontend**: React 18, Radix UI, Tailwind CSS, Recharts
-- **Backend**: Node.js, Express.js, MongoDB, Mongoose
-- **Authentication**: JWT tokens with role-based access
-- **Maps**: Leaflet.js for interactive mapping
-- **Charts**: Recharts for data visualization
-- **State Management**: React Context API
+### For Farmers
+- User registration and authentication
+- Land parcel registration and management
+- Crop tracking and yield recording
+- Water usage monitoring
+- Sustainability score tracking
+- Dashboard with analytics
 
-## 🚀 Quick Start
+### For Government Officials
+- View all registered farmers and land parcels
+- Analytics dashboard with regional sustainability metrics
+- Soil type distribution analysis
+- Policy management
+- Reporting capabilities
 
-### Prerequisites
+## Technologies Used
+
+### Frontend
+- React 19
+- React Router v7
+- Tailwind CSS v4
+- Vite 7
+- Axios for API requests
+
+### Backend
+- Node.js
+- Express.js v5
+- MongoDB with Mongoose
+- JSON Web Tokens (JWT) for authentication
+- Bcrypt.js for password hashing
+- Dotenv for environment management
+
+### Database
+- MongoDB
+
+### Development Tools
+- pnpm for package management
+- ESLint for code linting
+- Nodemon for development server auto-restart
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
 - Node.js (v16 or higher)
-- MongoDB (local or cloud)
-- npm or yarn
+- pnpm (v7 or higher)
+- MongoDB (v4.4 or higher)
 
-### Installation
+## Project Structure
 
-1. **Clone the repository**
+```
+land-registration-system/
+├── client/                 # React frontend
+│   ├── public/             # Static assets
+│   ├── src/                # Source code
+│   │   ├── components/     # React components
+│   │   ├── utils/          # Utility functions
+│   │   ├── App.jsx         # Main App component
+│   │   └── main.jsx        # Entry point
+│   ├── index.html          # HTML template
+│   └── package.json        # Frontend dependencies
+├── server/                 # Node.js backend
+│   ├── controllers/        # Request handlers
+│   ├── middleware/         # Custom middleware
+│   ├── models/             # Mongoose models
+│   ├── routes/             # API routes
+│   ├── server.js           # Entry point
+│   └── package.json        # Backend dependencies
+└── README.md               # This file
+```
+
+## Installation
+
+1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd greenlands-land-management
+   cd land-registration-system
    ```
 
-2. **Install dependencies**
+2. Install backend dependencies:
    ```bash
-   # Install server dependencies
-   npm install
-   
-   # Install client dependencies
-   cd client
-   npm install
+   cd server
+   pnpm install
    cd ..
    ```
 
-3. **Environment Setup**
+3. Install frontend dependencies:
    ```bash
-   # Create .env file in root directory
-   cp .env.example .env
+   cd client
+   pnpm install
+   cd ..
    ```
 
-   Add your environment variables:
-   ```env
-   NODE_ENV=development
-   PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/greenlands
-   JWT_SECRET=your-super-secret-jwt-key
-   CLIENT_URL=http://localhost:3000
-   ```
+## Environment Variables
 
-4. **Start the application**
+### Backend (.env in server directory)
+```env
+# Server Environment Variables
+PORT=5000
+NODE_ENV=development
+
+# Database configuration
+MONGO_URI=mongodb://localhost:27017/greenlands-db
+
+# JWT configuration
+JWT_SECRET=land_registration_secret_key
+JWT_EXPIRE=7d
+
+# Email configuration (for notifications)
+EMAIL_HOST=smtp.example.com
+EMAIL_PORT=587
+EMAIL_USER=
+EMAIL_PASSWORD=
+
+# Frontend URL
+CLIENT_URL=https://ogollas-final-project.vercel.app/
+```
+
+### Frontend (.env in client directory)
+```env
+# Client Environment Variables
+VITE_API_URL=http://localhost:5000/api
+VITE_APP_NAME=Land Registration System
+
+# Development settings
+NODE_ENV=development
+
+# Feature flags
+VITE_FEATURE_ANALYTICS=true
+VITE_FEATURE_LAND_MANAGEMENT=true
+```
+
+## Running the Application
+
+### Development Mode
+
+1. Start the backend server:
    ```bash
-   # Development mode (runs both server and client)
-   npm run dev
-   
-   # Or run separately:
-   # Terminal 1 - Start server
-   npm run server
-   
-   # Terminal 2 - Start client
-   npm run client
+   cd server
+   pnpm run dev
    ```
 
-5. **Access the application**
-   - Frontend: https://ogollas-final-project.vercel.app/
-   - Backend API: https://sustainable-lands.onrender.com
-     
+2. In a new terminal, start the frontend development server:
+   ```bash
+   cd client
+   pnpm run dev
+   ```
 
-## 📁 Project Structure
+3. Open your browser and navigate to `http://localhost:5173`
 
-```
-greenlands-land-management/
-├── client/                 # React frontend
-│   ├── public/
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── contexts/       # React context providers
-│   │   ├── pages/          # Page components
-│   │   └── utils/          # Utility functions
-│   ├── package.json
-│   └── tailwind.config.js
-├── server/                 # Node.js backend
-│   ├── models/             # Mongoose models
-│   ├── routes/             # API routes
-│   ├── middleware/         # Custom middleware
-│   └── index.js           # Server entry point
-├── package.json
-└── README.md
-```
+### Production Mode
 
-## 🎨 Design System
+1. Build the frontend:
+   ```bash
+   cd client
+   pnpm run build
+   ```
 
-### Color Palette
-- **Primary Green**: `#0F5132` (Deep green)
-- **Secondary Green**: `#10B981` (Light green)
-- **Accent Green**: `#047857` (Emerald)
-- **Black**: `#0A0A0A` (Pure black)
-- **Charcoal**: `#1F2937` (Dark gray)
-- **Sage**: `#6B7280` (Medium gray)
+2. Start the backend server:
+   ```bash
+   cd server
+   pnpm start
+   ```
 
-### Typography
-- **Font Family**: Inter (Google Fonts)
-- **Weights**: 300, 400, 500, 600, 700
+3. The application will be available at `http://localhost:5000`
 
-### Components
-- **Cards**: Rounded corners with subtle shadows
-- **Buttons**: Multiple variants (primary, secondary, outline)
-- **Forms**: Consistent input styling with focus states
-- **Navigation**: Responsive sidebar with active states
+## Deployment
 
-## 🔧 Configuration
+### Deploying to Render (Backend) and Vercel (Frontend)
 
-### Frontend Configuration
-The React app uses:
-- **Tailwind CSS** for styling
-- **Radix UI** for accessible components
-- **React Router** for navigation
-- **Axios** for API calls
-- **Recharts** for data visualization
+#### 1. Set up MongoDB Atlas
+1. Create a MongoDB Atlas account
+2. Create a new cluster
+3. Configure database access and network access
+4. Get your connection string
 
-### Backend Configuration
-The Express server includes:
-- **Helmet** for security headers
-- **CORS** for cross-origin requests
-- **Rate limiting** for API protection
-- **Compression** for response optimization
-- **Morgan** for request logging
+#### 2. Deploy Backend to Render
+1. Push your code to GitHub
+2. Create a new Web Service on Render
+3. Connect your GitHub repository
+4. Configure the service:
+   - Name: `greenlands-api`
+   - Environment: `Node`
+   - Build command: `npm install`
+   - Start command: `npm start`
+   - Root directory: `server`
+   - Plan: Free
 
-## 📊 Data Models
+5. Set Environment Variables in Render:
+   ```
+   NODE_ENV=production
+   PORT=8080
+   MONGO_URI=your_mongodb_atlas_connection_string
+   JWT_SECRET=your_secure_jwt_secret  # This is critical for JWT to work properly
+   CLIENT_URL=https://your-vercel-app-url.vercel.app
+   ```
 
-### User Model
-```javascript
-{
-  name: String,
-  email: String (unique),
-  password: String (hashed),
-  role: Enum ['farmer', 'government', 'admin'],
-  phone: String,
-  location: String,
-  farmDetails: Object, // For farmers
-  department: String,   // For government
-  permissions: Array
-}
-```
+#### 3. Deploy Frontend to Vercel
+1. Create a new project on Vercel
+2. Import your GitHub repository
+3. Configure the project:
+   - Framework: `Vite`
+   - Root directory: `client`
+   - Build command: `npm run build`
+   - Output directory: `dist`
+   - Install command: `npm install`
 
-### Land Model
-```javascript
-{
-  name: String,
-  area: Number,
-  crop: String,
-  soilType: String,
-  status: String,
-  coordinates: [Number, Number],
-  farmer: ObjectId,
-  lastUpdated: Date
-}
-```
+4. Set Environment Variables in Vercel:
+   ```
+   VITE_API_URL=https://your-render-app-url.onrender.com/api
+   ```
 
-## 🔐 Authentication & Authorization
+#### 4. Update Environment Variables After Deployment
+After your applications are deployed:
 
-- **JWT-based authentication**
-- **Role-based access control**
-- **Secure password hashing** with bcrypt
-- **Token expiration** (24 hours)
-- **Protected routes** with middleware
+1. In Render, update the `CLIENT_URL` to match your Vercel frontend URL:
+   ```
+   CLIENT_URL=https://your-vercel-app-url.vercel.app
+   ```
 
-## 📱 Responsive Design
+2. In Vercel, update the `VITE_API_URL` to match your Render backend URL:
+   ```
+   VITE_API_URL=https://your-render-app-url.onrender.com/api
+   ```
 
-The application is fully responsive with breakpoints:
-- **Mobile**: 320px - 767px
-- **Tablet**: 768px - 1023px
-- **Desktop**: 1024px - 1439px
-- **Large Desktop**: 1440px+
+#### 5. Important Notes for Deployment
+- Make sure to use a strong, secure `JWT_SECRET` in your Render environment variables
+- Ensure the `MONGO_URI` is correctly configured with your MongoDB Atlas connection string
+- Verify that the `CLIENT_URL` in Render matches your Vercel frontend URL
+- Make sure the `VITE_API_URL` in Vercel matches your Render backend URL
 
-## 🚀 Deployment
+### Troubleshooting Common Deployment Issues
 
-### Frontend Deployment
-```bash
-# Build for production
-cd client
-npm run build
+#### JWT Malformed Error
+If you encounter a "JsonWebTokenError: jwt malformed" error:
 
-# Deploy to your preferred platform (Vercel, Netlify, etc.)
-```
+1. Ensure the `JWT_SECRET` environment variable is set correctly in Render
+2. Make sure you're using a strong, secure secret (not the default development secret)
+3. Check that the token is being properly stored and retrieved in the client
+4. Verify that CORS is properly configured
 
-### Backend Deployment
-```bash
-# Set production environment variables
-NODE_ENV=production
-MONGODB_URI=your-production-mongodb-uri
-JWT_SECRET=your-production-jwt-secret
+#### CORS Errors
+If you encounter CORS errors:
 
-# Start production server
-npm start
-```
+1. Ensure the `CLIENT_URL` environment variable in Render matches your Vercel frontend URL
+2. Check that the CORS configuration in `server.js` is correct
 
-## 🤝 Contributing
+#### API Endpoints Not Found
+If API endpoints return 404 errors:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Ensure the `VITE_API_URL` in Vercel matches your Render backend URL
+2. Verify that your Render backend is running correctly
 
-## 📝 License
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login user
+- `GET /api/auth/profile` - Get user profile (protected)
+
+### Land Management (Farmer)
+- `POST /api/land` - Create a new land parcel (protected)
+- `GET /api/land` - Get all land parcels for a farmer (protected)
+- `GET /api/land/:id` - Get a specific land parcel (protected)
+- `PUT /api/land/:id` - Update a land parcel (protected)
+- `DELETE /api/land/:id` - Delete a land parcel (protected)
+- `POST /api/land/:id/crops` - Add crop to land parcel (protected)
+- `POST /api/land/:id/water` - Add water usage record (protected)
+
+### Government
+- `GET /api/government/analytics` - Get analytics data (protected, government only)
+- `GET /api/government/farmers` - Get all farmers (protected, government only)
+- `GET /api/government/lands` - Get all land parcels (protected, government only)
+
+## Development Guidelines
+
+### Code Style
+- Follow the existing code style in the project
+- Use functional components in React
+- Use async/await for asynchronous operations
+- Write meaningful commit messages
+
+### Branching Strategy
+- Create feature branches from `main`
+- Use descriptive branch names (e.g., `feature/user-authentication`)
+- Create pull requests for code review
+
+### Testing
+- Write unit tests for critical functionality
+- Test API endpoints with tools like Postman
+- Ensure cross-browser compatibility
+
+### Security
+- Never commit sensitive information to the repository
+- Use environment variables for configuration
+- Validate and sanitize all user inputs
+- Implement proper authentication and authorization
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## Support
 
-For support and questions:
-- Create an issue in the repository
-- Contact the development team
-- Check the documentation
-
-## 🔮 Future Enhancements
-
-- **Real-time notifications** with WebSocket
-- **Mobile app** with React Native
-- **AI-powered insights** for crop recommendations
-- **Weather integration** for farming decisions
-- **Blockchain integration** for land ownership verification
-- **Multi-language support** for international users
-
----
-
-**Built with ❤️ for sustainable agriculture and land management** 
+For support, please contact the development team or open an issue in the repository.
