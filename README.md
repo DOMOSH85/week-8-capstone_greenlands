@@ -93,7 +93,6 @@ land-registration-system/
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd land-registration-system
    ```
 
 2. Install backend dependencies:
@@ -139,7 +138,7 @@ CLIENT_URL=https://ogollas-final-project.vercel.app/
 ```env
 # Client Environment Variables
 VITE_API_URL=http://localhost:5000/api
-VITE_APP_NAME=Land Registration System
+VITE_APP_NAME=Greenlands
 
 # Development settings
 NODE_ENV=development
@@ -320,5 +319,6 @@ If API endpoints return 404 errors:
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Support
+
 
 For support, please contact the development team or open an issue in the repository.
